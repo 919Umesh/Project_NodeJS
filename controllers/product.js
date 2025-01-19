@@ -38,12 +38,31 @@ const handleCreateProduct = async (req, res) => {
 const handleGetProducts = async (req, res) => {
     try {
         const products = await Product.find();
-        res.status(200).json({ status: 200, message: 'Products retrieved successfully', products });
+
+        // Add full URL to the productImage field
+        const updatedProducts = products.map(product => {
+            return {
+                ...product._doc, 
+                productImage: product.productImage
+                    ? `${req.protocol}://${req.get('host')}/${product.productImage.replace(/\\/g, '/')}`
+                    : null,
+            };
+        });
+
+        res.status(200).json({
+            status: 200,
+            message: 'Products retrieved successfully',
+            products: updatedProducts,
+        });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ status: 500, message: 'Server error, please try again later' });
+        console.error('Error retrieving products:', error);
+        res.status(500).json({
+            status: 500,
+            message: 'Server error, please try again later',
+        });
     }
 };
+
 
 // Search products
 const handleSearchProducts = async (req, res) => {
