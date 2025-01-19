@@ -11,8 +11,6 @@ const socketIo = require('socket.io');
 
 const app = express(); // Initialize app here
 
-// Serve static files
-app.use('/uploads', express.static('uploads'));
 
 // Create HTTP server and Socket.IO instance
 const server = http.createServer(app);

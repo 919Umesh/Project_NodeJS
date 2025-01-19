@@ -34,10 +34,7 @@ const productSchema = new mongoose.Schema({
         type: Date,
         required: true
     },
-    productImage: {
-        type: String,
-        required: true
-    }
+
 }, { timestamps: true });
 
 const Product = mongoose.model('Product', productSchema);
