@@ -1,15 +1,19 @@
 // controllers/product.js
 const Product = require('../models/product');
-
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 
 const handleCreateProduct = async (req, res) => {
     try {
+        console.log('------sdgd-----');  
+         console.log(req.body);  
+         console.log(req.file); 
         const { name, salesRate, purchaseRate, quantity, unit, duration, fromDate, toDate } = req.body;
+        const productImage = req.file ? req.file.path : null;
 
-        // //To check the any null
-        // if (!name || !salesRate || !purchaseRate || !quantity || !unit || !duration || !fromDate || !toDate) {
-        //     return res.status(400).json({ status: 400, message: 'All fields required' });
-        // }
+        if (!name || !salesRate || !purchaseRate || !quantity || !unit || !duration || !fromDate || !toDate) {
+            return res.status(400).json({ status: 400, message: 'All fields required' });
+        }
 
         const newProduct = new Product({
             name,
@@ -20,6 +24,7 @@ const handleCreateProduct = async (req, res) => {
             duration,
             fromDate,
             toDate,
+            productImage
         });
 
         await newProduct.save();
