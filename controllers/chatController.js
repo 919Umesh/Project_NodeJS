@@ -1,13 +1,22 @@
 const Message = require('../models/message');
 
-// Controller to get chat history
+
 const getChatHistory = async (req, res) => {
     try {
-        const messages = await Message.find().sort({ timestamp: 1 });  // Retrieve all messages in order of timestamp
+        const { sender, receiver } = req.query; 
+
+        
+        const messages = await Message.find({
+            $or: [
+                { sender, receiver },
+                { sender: receiver, receiver: sender },
+            ],
+        }).sort({ timestamp: 1 });
+
         res.status(200).json({
             status: 200,
             message: 'Chat history fetched successfully',
-            data: messages
+            data: messages,
         });
     } catch (error) {
         console.error(error);
@@ -15,17 +24,17 @@ const getChatHistory = async (req, res) => {
     }
 };
 
-// Controller to save new messages
+
 const saveMessage = async (messageData) => {
     try {
         const newMessage = new Message(messageData);
-        await newMessage.save();  // Save the message in the database
+        await newMessage.save();
     } catch (error) {
         console.error(error);
     }
 };
 
 module.exports = {
+    saveMessage,
     getChatHistory,
-    saveMessage
 };

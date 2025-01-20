@@ -9,50 +9,62 @@ const productRouter = require('./routes/product');
 const http = require('http');
 const socketIo = require('socket.io');
 
-const app = express(); // Initialize app here
+const app = express(); 
 
-// Serve static files
 app.use('/uploads', express.static('uploads'));
 
-// Create HTTP server and Socket.IO instance
 const server = http.createServer(app);
 const io = socketIo(server);
 
-// Socket.IO connection handling
+
 app.set('io', io);
 
 io.on('connection', (socket) => {
-    console.log('A user connected:', socket.id);
+    const userId = socket.handshake.query.userId;
+    console.log(`User connected: ${userId}, Socket ID: ${socket.id}`);
 
-    socket.on('chatMessage', (message) => {
-        console.log('Received message:', message);
+    socket.on('chatMessage', async (data) => {
+        console.log(`Message from ${data.senderId} to ${data.receiverId}: ${data.message}`);
 
-        const messageData = { user: socket.id, message };
-        require('./controllers/chatController').saveMessage(messageData);  
+        const messageData = {
+            sender: data.senderId,
+            receiver: data.receiverId,
+            message: data.message,
+            timestamp: new Date(),
+        };
 
-        io.emit('chatMessage', { user: socket.id, message });
+     
+        await require('./controllers/chatController').saveMessage(messageData);
+
+
+        const receiverSocket = [...io.sockets.sockets.values()].find(
+            (s) => s.handshake.query.userId === data.receiverId
+        );
+
+        if (receiverSocket) {
+            receiverSocket.emit('chatMessage', messageData);
+        }
     });
 
     socket.on('disconnect', () => {
-        console.log('A user disconnected:', socket.id);
+        console.log(`User disconnected: ${userId}`);
     });
 });
 
-// Middleware setup
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Connect to MongoDB
+
 connectMongoDB('mongodb://localhost:27017/mvc');
 
-// Define routes for different resources
 app.use('/users', userRouter);
 app.use('/project', projectRouter);
 app.use('/event', eventRouter);
 app.use('/chat', chatRoutes);
 app.use('/product', productRouter);
 
-// Start server
 server.listen(3000, () => {
     console.log("Server is running on http://localhost:3000");
 });
