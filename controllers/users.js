@@ -59,7 +59,7 @@ const handleGetAllUsers = async (req, res) => {
     }
 };
 
-// Login API
+
 const handleLoginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -68,19 +68,19 @@ const handleLoginUser = async (req, res) => {
             return res.status(400).json({ status: 400, message: "Email and password are required" });
         }
 
-        // Find the user by email
+    
         const user = await Users.findOne({ email });
 
         if (!user) {
             return res.status(404).json({ status: 404, message: "User not found" });
         }
 
-        // Check if the password matches
+    
         if (user.password !== password) {
             return res.status(400).json({ status: 400, message: "Invalid password" });
         }
 
-        // Successful login
+    
         res.status(200).json({
             status: 200,
             message: 'Login successful',
