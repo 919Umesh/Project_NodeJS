@@ -1,4 +1,6 @@
 const Users = require('../models/user');
+const jwt = require('jsonwebtoken');
+const SECRET_KEY =  "MIIEpAIBAAKCAQEAwICVGZOlCt79JZRG9d7NslU3aPVRzC2rtJJTq7G8848";
 
 const handleCreateUser = async (req, res) => {
     try {
@@ -59,6 +61,9 @@ const handleGetAllUsers = async (req, res) => {
     }
 };
 
+function generateToken(payload) {
+    return jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' });
+}
 
 const handleLoginUser = async (req, res) => {
     try {
@@ -80,11 +85,12 @@ const handleLoginUser = async (req, res) => {
             return res.status(400).json({ status: 400, message: "Invalid password" });
         }
 
-    
+        const token = generateToken({ id: user._id, email: user.email });
         res.status(200).json({
             status: 200,
             message: 'Login successful',
-            user: { id: user._id, name: user.name, email: user.email }
+            user: { id: user._id, name: user.name, email: user.email },
+            token: token
         });
 
     } catch (error) {
