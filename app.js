@@ -6,10 +6,9 @@ const projectRouter = require('./routes/project');
 const eventRouter = require('./routes/events');
 const chatRoutes = require('./routes/chat');
 const productRouter = require('./routes/product');
-const quizRouter  = require('./routes/quiz');
 const http = require('http');
 const socketIo = require('socket.io');
-const mongoose = require('mongoose');
+
 const app = express(); 
 
 app.use('/uploads', express.static('uploads'));
@@ -37,6 +36,7 @@ io.on('connection', (socket) => {
      
         await require('./controllers/chatController').saveMessage(messageData);
 
+
         const receiverSocket = [...io.sockets.sockets.values()].find(
             (s) => s.handshake.query.userId === data.receiverId
         );
@@ -57,24 +57,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-connectMongoDB('mongodb+srv://globaltechumesh11:hwkEuf3!QvLGxxb@projectmanage.an17y.mongodb.net/');
-// Connect to MongoDB Atlas
-const dbURI ="mongodb+srv://globaltechumesh11:hwkEuf3!QvLGxxb@projectmanage.an17y.mongodb.net/";
-mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => {
-    console.log('Successfully connected to MongoDB Atlas');
-  })
-  .catch((error) => {
-    console.error('Error connecting to MongoDB Atlas:', error);
-  });
-
+connectMongoDB('mongodb://localhost:27017/mvc');
 
 app.use('/users', userRouter);
 app.use('/project', projectRouter);
 app.use('/event', eventRouter);
 app.use('/chat', chatRoutes);
 app.use('/product', productRouter);
-app.use('/quiz', quizRouter);
 
 server.listen(3000, () => {
     console.log("Server is running on http://localhost:3000");
