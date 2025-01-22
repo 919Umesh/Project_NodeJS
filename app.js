@@ -47,6 +47,49 @@ io.on('connection', (socket) => {
         }
     });
 
+    // WebRTC signaling for audio calls
+    socket.on('offer', (data) => {
+        console.log(`Offer from ${data.senderId} to ${data.receiverId}`);
+        const receiverSocket = [...io.sockets.sockets.values()].find(
+            (s) => s.handshake.query.userId === data.receiverId
+        );
+
+        if (receiverSocket) {
+            receiverSocket.emit('offer', { 
+                senderId: data.senderId, 
+                offer: data.offer 
+            });
+        }
+    });
+    
+    socket.on('answer', (data) => {
+        console.log(`Answer from ${data.senderId} to ${data.receiverId}`);
+        const receiverSocket = [...io.sockets.sockets.values()].find(
+            (s) => s.handshake.query.userId === data.receiverId
+        );
+
+        if (receiverSocket) {
+            receiverSocket.emit('answer', { 
+                senderId: data.senderId, 
+                answer: data.answer 
+            });
+        }
+    });
+
+    socket.on('ice-candidate', (data) => {
+        console.log(`ICE Candidate from ${data.senderId} to ${data.receiverId}`);
+        const receiverSocket = [...io.sockets.sockets.values()].find(
+            (s) => s.handshake.query.userId === data.receiverId
+        );
+
+        if (receiverSocket) {
+            receiverSocket.emit('ice-candidate', { 
+                senderId: data.senderId, 
+                candidate: data.candidate 
+            });
+        }
+    });
+
     socket.on('disconnect', () => {
         console.log(`User disconnected: ${userId}`);
     });
@@ -59,6 +102,7 @@ app.use(express.urlencoded({ extended: true }));
 
 
 connectMongoDB('mongodb://localhost:27017/mvc');
+//connectMongoDB('mongodb+srv://globaltechumesh11:E.ecAk7t.2UUuyK@projectmanage.an17y.mongodb.net/');
 
 app.use('/users', userRouter);
 app.use('/project', projectRouter);
@@ -68,5 +112,5 @@ app.use('/product', productRouter);
 app.use('/quiz', quizRouter);
 
 server.listen(3000, () => {
-    console.log("Server is running on http://localhost:3000");
+ console.log("Server is running on http://localhost:3000");
 });
