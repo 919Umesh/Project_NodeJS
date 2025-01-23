@@ -7,6 +7,7 @@ const eventRouter = require('./routes/events');
 const chatRoutes = require('./routes/chat');
 const productRouter = require('./routes/product');
 const quizRouter = require('./routes/quiz');
+const locationRouter = require('./routes/location');
 const http = require('http');
 const socketIo = require('socket.io');
 
@@ -110,6 +111,7 @@ app.use('/event', eventRouter);
 app.use('/chat', chatRoutes);
 app.use('/product', productRouter);
 app.use('/quiz', quizRouter);
+app.use('/location', locationRouter);
 
 server.listen(3000, () => {
  console.log("Server is running on http://localhost:3000");
