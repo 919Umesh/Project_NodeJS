@@ -1,4 +1,3 @@
-// routes/quiz.js
 const express = require('express');
 const router = express.Router();
 const { createQuestion, createMultipleQuestions, getAllQuestions } = require('../controllers/questionController');

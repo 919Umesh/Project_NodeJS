@@ -72,17 +72,17 @@ const handleSearchProjects = async (req, res) => {
 
         const query = {};
 
-        // Add name filter (case-insensitive)
+        
         if (name) {
-            query.name = { $regex: name, $options: 'i' }; // Case-insensitive match
+            query.name = { $regex: name, $options: 'i' };
         }
 
-        // Add location filter (case-insensitive)
+
         if (location) {
-            query.location = { $regex: location, $options: 'i' }; // Case-insensitive match
+            query.location = { $regex: location, $options: 'i' }; 
         }
 
-        // Add status filter
+    
         if (status) {
             const allowedStatuses = ['pending', 'in-progress', 'complete'];
             if (!allowedStatuses.includes(status)) {
@@ -91,14 +91,14 @@ const handleSearchProjects = async (req, res) => {
             query.status = status;
         }
 
-        // Add amount range filter
+    
         if (minAmount || maxAmount) {
             query.amount = {};
-            if (minAmount) query.amount.$gte = parseFloat(minAmount); // Greater than or equal to minAmount
-            if (maxAmount) query.amount.$lte = parseFloat(maxAmount); // Less than or equal to maxAmount
+            if (minAmount) query.amount.$gte = parseFloat(minAmount);
+            if (maxAmount) query.amount.$lte = parseFloat(maxAmount);
         }
 
-        // Fetch matching projects
+
         const projects = await Project.find(query);
 
         res.status(200).json({

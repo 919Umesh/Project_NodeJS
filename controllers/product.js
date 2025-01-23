@@ -1,4 +1,4 @@
-// controllers/product.js
+
 const Product = require('../models/product');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
@@ -39,7 +39,7 @@ const handleGetProducts = async (req, res) => {
     try {
         const products = await Product.find();
 
-        // Add full URL to the productImage field
+        
         const updatedProducts = products.map(product => {
             return {
                 ...product._doc, 

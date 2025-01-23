@@ -1,6 +1,6 @@
 const Event = require('../models/event');
 
-// Handle creating a new event
+
 const handleCreateEvent = async (req, res) => {
     try {
         const { title, description, date } = req.body;
@@ -29,7 +29,6 @@ const handleCreateEvent = async (req, res) => {
     }
 };
 
-// Handle retrieving all events
 const handleGetAllEvents = async (req, res) => {
     try {
         const events = await Event.find({}).sort({ date: 1 });
@@ -49,7 +48,6 @@ const handleGetAllEvents = async (req, res) => {
     }
 };
 
-// Handle retrieving events for a specific day
 const handleGetEventsByDate = async (req, res) => {
     try {
         const { date } = req.query;

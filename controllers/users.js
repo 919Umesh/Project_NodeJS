@@ -62,7 +62,7 @@ const handleGetAllUsers = async (req, res) => {
 };
 
 function generateToken(payload) {
-    return jwt.sign(payload, SECRET_KEY, { expiresIn: '1h' });
+    return jwt.sign(payload, SECRET_KEY, { expiresIn: '2h' });
 }
 
 const handleLoginUser = async (req, res) => {
