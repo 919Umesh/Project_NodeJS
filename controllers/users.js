@@ -4,6 +4,7 @@ const SECRET_KEY =  "MIIEpAIBAAKCAQEAwICVGZOlCt79JZRG9d7NslU3aPVRzC2rtJJTq7G8848
 
 const handleCreateUser = async (req, res) => {
     try {
+        console.log(req.body);
         const { name, email, password } = req.body;
 
         

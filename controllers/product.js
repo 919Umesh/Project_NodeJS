@@ -5,9 +5,7 @@ const upload = multer({ dest: 'uploads/' });
 
 const handleCreateProduct = async (req, res) => {
     try {
-        console.log('------sdgd-----');  
-         console.log(req.body);  
-         console.log(req.file); 
+    
         const { name, salesRate, purchaseRate, quantity, unit, duration, fromDate, toDate } = req.body;
         const productImage = req.file ? req.file.path : null;
 

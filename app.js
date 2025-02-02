@@ -91,6 +91,36 @@ io.on('connection', (socket) => {
         }
     });
 
+    
+    // New event for initiating a call
+    socket.on('initiateCall', (data) => {
+        console.log(`Call initiated from ${data.senderId} to ${data.receiverId}`);
+        const receiverSocket = [...io.sockets.sockets.values()].find(
+            (s) => s.handshake.query.userId === data.receiverId
+        );
+
+        if (receiverSocket) {
+            receiverSocket.emit('incomingCall', { 
+                senderId: data.senderId, 
+                senderName: data.senderName 
+            });
+        }
+    });
+
+    // New event for handling call response
+    socket.on('callResponse', (data) => {
+        console.log(`Call response from ${data.receiverId} to ${data.senderId}: ${data.response}`);
+        const senderSocket = [...io.sockets.sockets.values()].find(
+            (s) => s.handshake.query.userId === data.senderId
+        );
+
+        if (senderSocket) {
+            senderSocket.emit('callResponse', { 
+                receiverId: data.receiverId, 
+                response: data.response 
+            });
+        }
+    });
     socket.on('disconnect', () => {
         console.log(`User disconnected: ${userId}`);
     });
