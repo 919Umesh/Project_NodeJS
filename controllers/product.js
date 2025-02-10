@@ -35,8 +35,18 @@ const handleCreateProduct = async (req, res) => {
 
 const handleGetProducts = async (req, res) => {
     try {
-        const products = await Product.find();
 
+        
+        const page = parseInt(req.query.page) || 1; 
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit; 
+
+     
+        const products = await Product.find()
+            .skip(skip)
+            .limit(limit);
+            
+        const totalProducts = await Product.countDocuments();
         
         const updatedProducts = products.map(product => {
             return {
@@ -51,6 +61,12 @@ const handleGetProducts = async (req, res) => {
             status: 200,
             message: 'Products retrieved successfully',
             products: updatedProducts,
+            pagination: {
+                currentPage: page,
+                totalPages: Math.ceil(totalProducts / limit),
+                totalItems: totalProducts,
+                itemsPerPage: limit,
+            },
         });
     } catch (error) {
         console.error('Error retrieving products:', error);
