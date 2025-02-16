@@ -133,7 +133,6 @@ app.use(express.urlencoded({ extended: true }));
 
 
 connectMongoDB('mongodb://localhost:27017/mvc');
-//connectMongoDB('mongodb+srv://globaltechumesh11:E.ecAk7t.2UUuyK@projectmanage.an17y.mongodb.net/');
 
 app.use('/users', userRouter);
 app.use('/project', projectRouter);

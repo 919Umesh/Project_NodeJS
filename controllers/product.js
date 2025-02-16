@@ -103,4 +103,28 @@ const handleSearchProducts = async (req, res) => {
     }
 };
 
-module.exports = { handleCreateProduct, handleGetProducts, handleSearchProducts };
+const handleUpdateProduct = async (req, res) => {
+    try {
+        const { id } = req.params; 
+        const updateFields = req.body;
+        const productImage = req.file ? req.file.path : null;
+
+        if (productImage) {
+            updateFields.productImage = productImage;
+        }
+
+        const updatedProduct = await Product.findByIdAndUpdate(id, updateFields, { new: true });
+
+        if (!updatedProduct) {
+            return res.status(404).json({ status: 404, message: 'Product not found' });
+        }
+
+        res.status(200).json({ status: 200, message: 'Product updated successfully', product: updatedProduct });
+    } catch (error) {
+        console.error('Error updating product:', error);
+        res.status(500).json({ status: 500, message: 'Server error, please try again later' });
+    }
+};
+
+
+module.exports = { handleCreateProduct, handleGetProducts, handleSearchProducts,handleUpdateProduct };

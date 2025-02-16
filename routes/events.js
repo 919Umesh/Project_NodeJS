@@ -4,11 +4,7 @@ const { handleCreateEvent, handleGetAllEvents, handleGetEventsByDate } = require
 
 
 router.post('/createEvent', handleCreateEvent);
-
-
 router.get('/getEvents', handleGetAllEvents);
-
-
 router.get('/getEventsByDate', handleGetEventsByDate);
 
 module.exports = router;
